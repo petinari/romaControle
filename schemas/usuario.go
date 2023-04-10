@@ -1,8 +1,6 @@
 package schemas
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Usuario struct {
 	ID     primitive.ObjectID `json:"_id" bson:"_id,omitempty"`

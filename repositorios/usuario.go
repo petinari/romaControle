@@ -39,4 +39,5 @@ func (repositorio *UsuarioRepositorio) CadastrarUsuario(ctx context.Context, usu
 	}
 
 	return usuario_inserido, nil
+
 }

@@ -5,9 +5,11 @@ import (
 	"romaControle/router"
 )
 
-var (
-	logger *config.Logger
-)
+func init() {
+	config.LoadEnv()
+	config.InitMongo()
+
+}
 
 func main() {
 

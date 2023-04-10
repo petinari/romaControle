@@ -18,8 +18,9 @@ func CriarUsuarioService(ctx *gin.Context) (*schemas.Usuario, error) {
 		return nil, e
 	}
 	request.Senha = string(senhaHash)
-	rep := repositorios.NovoRepUser(config.DB)
+	rep := repositorios.NovoRepUser(config.Client.Database(ctx.Request.Header.Get("tenant")))
 	usuario, err := rep.CadastrarUsuario(context.Background(), request)
+
 	if err != nil {
 		return nil, err
 	}
