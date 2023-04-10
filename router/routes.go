@@ -13,7 +13,8 @@ func initializeRoutes(router *gin.Engine) {
 	v1 := router.Group(basePath)
 	{
 
-		v1.POST("/usuario", controller.CriarUsuario)
+		v1.POST("/signin", controller.CriarUsuario)
+		v1.POST("/login", controller.Login)
 
 	}
 
