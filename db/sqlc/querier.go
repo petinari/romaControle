@@ -11,6 +11,7 @@ import (
 )
 
 type Querier interface {
+	CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error)
 	CreateTenant(ctx context.Context) (uuid.UUID, error)
 	CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error)
 	SelectUsuarioPorEmail(ctx context.Context, email string) (Usuario, error)

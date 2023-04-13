@@ -1,4 +1,4 @@
-package usuario
+package usuario_repositorio
 
 import (
 	"context"
@@ -16,7 +16,7 @@ func CadastrarUsuarioTenant(usuario db.Usuario) (*db.Usuario, error) {
 	usuario_inserido, err := queries.CreateUsuario(ctx, db.CreateUsuarioParams{
 		Email:    usuario.Email,
 		Senha:    usuario.Senha,
-		IDTenant: uuid.NullUUID{UUID: tenant, Valid: true},
+		IDTenant: uuid.Must(tenant, err),
 	})
 	if err != nil {
 		return nil, err

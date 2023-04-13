@@ -17,9 +17,9 @@ values ($1, $2, $3) returning id, email, senha, id_tenant
 `
 
 type CreateUsuarioParams struct {
-	Email    string        `json:"email"`
-	Senha    string        `json:"senha"`
-	IDTenant uuid.NullUUID `json:"id_tenant"`
+	Email    string    `json:"email"`
+	Senha    string    `json:"senha"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error) {

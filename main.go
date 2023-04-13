@@ -9,6 +9,7 @@ func init() {
 	config.LoadEnv()
 	config.InitMongo()
 	config.InitPostgres()
+	config.InitRedis()
 
 }
 

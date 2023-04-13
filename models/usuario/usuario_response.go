@@ -11,5 +11,5 @@ type UsuarioOut struct {
 }
 
 type TenantOut struct {
-	IDTenant uuid.NullUUID `json:"id_tenant"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }

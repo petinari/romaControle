@@ -3,11 +3,11 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"romaControle/servicos"
+	"romaControle/servicos/usuario_servicos"
 )
 
 func Login(ctx *gin.Context) {
-	token, erro := servicos.Login(ctx)
+	token, erro := usuario_servicos.Login(ctx)
 	if erro != nil {
 		sendError(ctx, http.StatusBadRequest, erro.Error())
 		return
