@@ -2,9 +2,9 @@ package router
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"romaControle/controller"
-	"romaControle/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 func initializeRoutes(router *gin.Engine) {
@@ -22,7 +22,8 @@ func initializeRoutes(router *gin.Engine) {
 	cadastrosProduto := fmt.Sprintf("%s%s", basePath, "produtos/")
 	produtos := router.Group(cadastrosProduto)
 	{
-		produtos.POST("/grupos", middleware.RequerAutenticacao, controller.CriarGrupoProduto)
+		produtos.POST("/grupos", controller.CriarGrupoProduto)
+		produtos.GET("/grupos", controller.GetGrupoProduto)
 	}
 
 }

@@ -1,22 +1,23 @@
 package config
 
 import (
-	"database/sql"
-	_ "github.com/lib/pq"
+	"context"
+	"github.com/jackc/pgx/v5"
 	"os"
 )
 
-var DB *sql.DB
+var DB *pgx.Conn
 
 func InitPostgres() {
 
 	var err error
-	DB, err = sql.Open("postgres", os.Getenv("POSTGRES"))
+	DB, err = pgx.Connect(context.Background(), os.Getenv("POSTGRES"))
 	if err != nil {
 		panic(err)
 	}
+
 	//defer DB.Close()
-	err = DB.Ping()
+	err = DB.Ping(context.Background())
 	if err != nil {
 		panic(err)
 	}

@@ -13,7 +13,7 @@ func CadastrarUsuarioTenant(usuario db.Usuario) (*db.Usuario, error) {
 	ctx := context.Background()
 	queries := db.New(config.DB)
 	tenant, err := queries.CreateTenant(ctx)
-	usuario_inserido, err := queries.CreateUsuario(ctx, db.CreateUsuarioParams{
+	usuarioInserido, err := queries.CreateUsuario(ctx, db.CreateUsuarioParams{
 		Email:    usuario.Email,
 		Senha:    usuario.Senha,
 		IDTenant: uuid.Must(tenant, err),
@@ -21,7 +21,7 @@ func CadastrarUsuarioTenant(usuario db.Usuario) (*db.Usuario, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &usuario_inserido, nil
+	return &usuarioInserido, nil
 }
 
 func SelectUsuarioPorEmail(login usuario.UsuarioLogin) (*db.Usuario, error) {

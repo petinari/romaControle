@@ -14,3 +14,12 @@ func CriarGrupoProduto(ctx *gin.Context) {
 	}
 	sendSuccess(ctx, grupoProduto)
 }
+
+func GetGrupoProduto(ctx *gin.Context) {
+	gruposProdutos, e := produtos_servicos.GetGrupoProdutos(ctx)
+	if e != nil {
+		sendError(ctx, http.StatusBadRequest, e.Error())
+		return
+	}
+	sendSuccess(ctx, gruposProdutos)
+}

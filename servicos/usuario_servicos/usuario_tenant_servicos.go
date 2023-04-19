@@ -4,17 +4,23 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"os"
 	"romaControle/config"
 	db "romaControle/db/sqlc"
 	"romaControle/models/usuario"
 	"romaControle/repositorios/usuario_repositorio"
 	"romaControle/seguranca"
+	"strconv"
+	"time"
 )
 
 func CriarUsuarioService(ctx *gin.Context) (*usuario.UsuarioOut, error) {
 
 	request := db.Usuario{}
-	ctx.BindJSON(&request)
+	err := ctx.BindJSON(&request)
+	if err != nil {
+		return nil, err
+	}
 	senhaHash, e := seguranca.Hash(request.Senha)
 	if e != nil {
 		return nil, e
@@ -25,7 +31,7 @@ func CriarUsuarioService(ctx *gin.Context) (*usuario.UsuarioOut, error) {
 	if err != nil {
 		return nil, err
 	}
-	usuario_out := &usuario.UsuarioOut{
+	usuarioOut := &usuario.UsuarioOut{
 		ID:    usuarioDb.ID,
 		Email: usuarioDb.Email,
 		TenantOut: usuario.TenantOut{
@@ -39,26 +45,34 @@ func CriarUsuarioService(ctx *gin.Context) (*usuario.UsuarioOut, error) {
 	//if err != nil {
 	//	return nil, err
 	//}
-	return usuario_out, err
+	return usuarioOut, err
 }
 
 func Login(ctx *gin.Context) (interface{}, error) {
 	request := usuario.UsuarioLogin{}
-	ctx.BindJSON(&request)
+
+	errs := ctx.BindJSON(&request)
+	if errs != nil {
+		return nil, errs
+	}
+
 	u, e := usuario_repositorio.SelectUsuarioPorEmail(request)
 	if e != nil {
 		return nil, errors.New("Usuario ou senha incorreto(s)")
 	}
+
 	err := seguranca.VerificarSenha(u.Senha, request.Senha)
 	if err != nil {
 		return nil, errors.New("Usuario ou senha incorreto(s)")
 	}
+
 	token, erro := seguranca.CriarToken(u.ID, u.IDTenant)
 	if erro != nil {
 		return nil, erro
 	}
+
 	redisClient := config.ClientRedis
-	usuario_out := &usuario.UsuarioOut{
+	usuarioOut := &usuario.UsuarioOut{
 		ID:    u.ID,
 		Email: u.Email,
 		TenantOut: usuario.TenantOut{
@@ -66,11 +80,13 @@ func Login(ctx *gin.Context) (interface{}, error) {
 		},
 	}
 
-	json, err := json.Marshal(usuario_out)
+	_json, err := json.Marshal(usuarioOut)
 	if err != nil {
 		return nil, err
 	}
-	err = redisClient.Set(ctx, u.ID.String(), json, 0).Err()
+
+	exp, _ := strconv.Atoi(os.Getenv("TEMPO_EXP"))
+	err = redisClient.Set(ctx, u.ID.String(), _json, time.Hour*time.Duration(exp)).Err()
 	if err != nil {
 		return nil, err
 	}

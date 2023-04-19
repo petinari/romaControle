@@ -23,7 +23,7 @@ type CreateUsuarioParams struct {
 }
 
 func (q *Queries) CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error) {
-	row := q.db.QueryRowContext(ctx, createUsuario, arg.Email, arg.Senha, arg.IDTenant)
+	row := q.db.QueryRow(ctx, createUsuario, arg.Email, arg.Senha, arg.IDTenant)
 	var i Usuario
 	err := row.Scan(
 		&i.ID,
@@ -39,7 +39,7 @@ select id, email, senha, id_tenant from usuarios where email = ($1)
 `
 
 func (q *Queries) SelectUsuarioPorEmail(ctx context.Context, email string) (Usuario, error) {
-	row := q.db.QueryRowContext(ctx, selectUsuarioPorEmail, email)
+	row := q.db.QueryRow(ctx, selectUsuarioPorEmail, email)
 	var i Usuario
 	err := row.Scan(
 		&i.ID,

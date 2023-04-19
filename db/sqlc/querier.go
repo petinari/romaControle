@@ -14,6 +14,8 @@ type Querier interface {
 	CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error)
 	CreateTenant(ctx context.Context) (uuid.UUID, error)
 	CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error)
+	SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) ([]GrupoProduto, error)
+	SelectTenantJoinUsuario(ctx context.Context) ([]SelectTenantJoinUsuarioRow, error)
 	SelectUsuarioPorEmail(ctx context.Context, email string) (Usuario, error)
 }
 

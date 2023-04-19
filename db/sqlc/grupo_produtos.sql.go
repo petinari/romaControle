@@ -22,8 +22,33 @@ type CreateGrupoProdutosParams struct {
 }
 
 func (q *Queries) CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error) {
-	row := q.db.QueryRowContext(ctx, createGrupoProdutos, arg.Nome, arg.IDTenant)
+	row := q.db.QueryRow(ctx, createGrupoProdutos, arg.Nome, arg.IDTenant)
 	var i GrupoProduto
 	err := row.Scan(&i.ID, &i.Nome, &i.IDTenant)
 	return i, err
+}
+
+const selectGrupoProdutos = `-- name: SelectGrupoProdutos :many
+SELECT id, nome, id_tenant
+FROM public.grupo_produtos where id_tenant = $1
+`
+
+func (q *Queries) SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) ([]GrupoProduto, error) {
+	rows, err := q.db.Query(ctx, selectGrupoProdutos, idTenant)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GrupoProduto{}
+	for rows.Next() {
+		var i GrupoProduto
+		if err := rows.Scan(&i.ID, &i.Nome, &i.IDTenant); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

@@ -3,20 +3,21 @@ package seguranca
 import (
 	"errors"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"os"
+	"strconv"
 	"strings"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 // CriarToken retorna um token assinado com as permissões do usuário
 func CriarToken(usuarioID uuid.UUID, tenantId uuid.UUID) (string, error) {
+	exp, _ := strconv.Atoi(os.Getenv("TEMPO_EXP"))
 	permissoes := jwt.MapClaims{}
 	permissoes["authorized"] = true
-	permissoes["exp"] = time.Now().Add(time.Second * 300).Unix()
+	permissoes["exp"] = time.Now().Add(time.Hour * time.Duration(exp)).Unix()
 	permissoes["usuarioId"] = usuarioID
 	permissoes["tenantId"] = tenantId
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
@@ -37,7 +38,7 @@ func ValidarToken(g *gin.Context) error {
 		return nil
 	}
 
-	return errors.New("Token inválido")
+	return errors.New("token inválido")
 }
 
 // ExtrairUsuarioID retorna o usuarioId que está salvo no token
@@ -64,7 +65,7 @@ func ExtrairDadosUsuarioToken(g *gin.Context) (usuarioID *uuid.UUID, tenantID *u
 
 		return &usuarioID, &tenantID, nil
 	}
-	return nil, nil, errors.New("Erro ao extrair dados do token do usuário.")
+	return nil, nil, errors.New("erro ao extrair dados do token do usuário")
 
 }
 
@@ -88,7 +89,7 @@ func ExtrairDadosUsuarioTokenInvalido(g *gin.Context) (usuarioID *uuid.UUID, ten
 
 		return &usuarioID, &tenantID, nil
 	}
-	return nil, nil, errors.New("Erro ao extrair dados do token do usuário.")
+	return nil, nil, errors.New("erro ao extrair dados do token do usuário")
 
 }
 

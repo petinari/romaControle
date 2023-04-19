@@ -32,5 +32,8 @@ func Initialize() {
 	}
 
 	// Run the server
-	router.Run("0.0.0.0:" + port)
+	err := router.Run("0.0.0.0:" + port)
+	if err != nil {
+		panic(err)
+	}
 }

@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"romaControle/config"
 	"romaControle/seguranca"
+
+	"github.com/gin-gonic/gin"
 )
 
 func RequerAutenticacao(g *gin.Context) {

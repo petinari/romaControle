@@ -19,3 +19,13 @@ func CadastrarGrupoProduto(grupoProduto db.GrupoProduto) (*db.GrupoProduto, erro
 	}
 	return &grupo_inserido, nil
 }
+
+func GetGrupoProduto(id_tenant uuid.UUID) ([]db.GrupoProduto, error) {
+	ctx := context.Background()
+	queries := db.New(config.DB)
+	gruposProdutos, er := queries.SelectGrupoProdutos(ctx, id_tenant)
+	if er != nil {
+		return nil, er
+	}
+	return gruposProdutos, nil
+}
