@@ -27,7 +27,7 @@ func CadastrarGrupoProdutos(ctx *gin.Context) (*db.GrupoProduto, error) {
 }
 
 func GetGrupoProdutos(ctx *gin.Context) (*[]db.GrupoProduto, error) {
-	gruposProdutos, e := produto_repositorio.GetGrupoProduto(uuid.MustParse("876f9634-0ffe-4e60-a66b-a1e6c1aec120"))
+	gruposProdutos, e := produto_repositorio.GetGrupoProduto(uuid.MustParse("9068701a-1386-4b83-9516-5860b2adfeca"))
 	if e != nil {
 		return nil, e
 	}
