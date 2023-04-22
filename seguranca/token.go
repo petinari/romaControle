@@ -3,13 +3,14 @@ package seguranca
 import (
 	"errors"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // CriarToken retorna um token assinado com as permissões do usuário
@@ -54,14 +55,9 @@ func ExtrairDadosUsuarioToken(g *gin.Context) (usuarioID *uuid.UUID, tenantID *u
 	}
 
 	if permissoes, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		usuarioID, erro := uuid.Parse(fmt.Sprintf("%v", permissoes["usuarioId"]))
-		if erro != nil {
-			return nil, nil, erro
-		}
-		tenantID, erro := uuid.Parse(fmt.Sprintf("%v", permissoes["tenantId"]))
-		if erro != nil {
-			return nil, nil, erro
-		}
+		usuarioID := uuid.MustParse(fmt.Sprintf("%v", permissoes["usuarioId"]))
+
+		tenantID := uuid.MustParse(fmt.Sprintf("%v", permissoes["tenantId"]))
 
 		return &usuarioID, &tenantID, nil
 	}

@@ -9,28 +9,54 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createGrupoProdutos = `-- name: CreateGrupoProdutos :one
-insert into grupo_produtos (nome, id_tenant)
-values ($1, $2) returning id, nome, id_tenant
+insert into public.grupo_produtos (nome, id_tenant, ativo) values ($1, $2, $3) returning id, nome, id_tenant, ativo
 `
 
 type CreateGrupoProdutosParams struct {
-	Nome     string    `json:"nome"`
-	IDTenant uuid.UUID `json:"id_tenant"`
+	Nome     string      `json:"nome"`
+	IDTenant uuid.UUID   `json:"id_tenant"`
+	Ativo    pgtype.Bool `json:"ativo"`
 }
 
 func (q *Queries) CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error) {
-	row := q.db.QueryRow(ctx, createGrupoProdutos, arg.Nome, arg.IDTenant)
+	row := q.db.QueryRow(ctx, createGrupoProdutos, arg.Nome, arg.IDTenant, arg.Ativo)
 	var i GrupoProduto
-	err := row.Scan(&i.ID, &i.Nome, &i.IDTenant)
+	err := row.Scan(
+		&i.ID,
+		&i.Nome,
+		&i.IDTenant,
+		&i.Ativo,
+	)
+	return i, err
+}
+
+const disableGrupoProdutos = `-- name: DisableGrupoProdutos :one
+UPDATE public.grupo_produtos SET ativo = FALSE WHERE id = $1 and id_tenant = $2 returning id, nome, id_tenant, ativo
+`
+
+type DisableGrupoProdutosParams struct {
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
+}
+
+func (q *Queries) DisableGrupoProdutos(ctx context.Context, arg DisableGrupoProdutosParams) (GrupoProduto, error) {
+	row := q.db.QueryRow(ctx, disableGrupoProdutos, arg.ID, arg.IDTenant)
+	var i GrupoProduto
+	err := row.Scan(
+		&i.ID,
+		&i.Nome,
+		&i.IDTenant,
+		&i.Ativo,
+	)
 	return i, err
 }
 
 const selectGrupoProdutos = `-- name: SelectGrupoProdutos :many
-SELECT id, nome, id_tenant
-FROM public.grupo_produtos where id_tenant = $1
+SELECT id, nome, id_tenant, ativo FROM public.grupo_produtos where id_tenant = $1 and ativo = TRUE
 `
 
 func (q *Queries) SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) ([]GrupoProduto, error) {
@@ -42,7 +68,12 @@ func (q *Queries) SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) (
 	items := []GrupoProduto{}
 	for rows.Next() {
 		var i GrupoProduto
-		if err := rows.Scan(&i.ID, &i.Nome, &i.IDTenant); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Nome,
+			&i.IDTenant,
+			&i.Ativo,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -51,4 +82,81 @@ func (q *Queries) SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) (
 		return nil, err
 	}
 	return items, nil
+}
+
+const selectGrupoProdutosById = `-- name: SelectGrupoProdutosById :one
+SELECT id, nome, id_tenant, ativo FROM public.grupo_produtos where id = $1 and id_tenant = $2 AND ativo = TRUE
+`
+
+type SelectGrupoProdutosByIdParams struct {
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
+}
+
+func (q *Queries) SelectGrupoProdutosById(ctx context.Context, arg SelectGrupoProdutosByIdParams) (GrupoProduto, error) {
+	row := q.db.QueryRow(ctx, selectGrupoProdutosById, arg.ID, arg.IDTenant)
+	var i GrupoProduto
+	err := row.Scan(
+		&i.ID,
+		&i.Nome,
+		&i.IDTenant,
+		&i.Ativo,
+	)
+	return i, err
+}
+
+const selectGrupoProdutosByNome = `-- name: SelectGrupoProdutosByNome :one
+SELECT id, nome, ativo, id_tenant FROM public.grupo_produtos where nome = $1 and id_tenant = $2 AND ativo = TRUE
+`
+
+type SelectGrupoProdutosByNomeParams struct {
+	Nome     string    `json:"nome"`
+	IDTenant uuid.UUID `json:"id_tenant"`
+}
+
+type SelectGrupoProdutosByNomeRow struct {
+	ID       uuid.UUID   `json:"id"`
+	Nome     string      `json:"nome"`
+	Ativo    pgtype.Bool `json:"ativo"`
+	IDTenant uuid.UUID   `json:"id_tenant"`
+}
+
+func (q *Queries) SelectGrupoProdutosByNome(ctx context.Context, arg SelectGrupoProdutosByNomeParams) (SelectGrupoProdutosByNomeRow, error) {
+	row := q.db.QueryRow(ctx, selectGrupoProdutosByNome, arg.Nome, arg.IDTenant)
+	var i SelectGrupoProdutosByNomeRow
+	err := row.Scan(
+		&i.ID,
+		&i.Nome,
+		&i.Ativo,
+		&i.IDTenant,
+	)
+	return i, err
+}
+
+const updateGrupoProdutos = `-- name: UpdateGrupoProdutos :one
+UPDATE public.grupo_produtos SET nome = $1, ativo = $2 WHERE id = $3 and id_tenant = $4 returning id, nome, id_tenant, ativo
+`
+
+type UpdateGrupoProdutosParams struct {
+	Nome     string      `json:"nome"`
+	Ativo    pgtype.Bool `json:"ativo"`
+	ID       uuid.UUID   `json:"id"`
+	IDTenant uuid.UUID   `json:"id_tenant"`
+}
+
+func (q *Queries) UpdateGrupoProdutos(ctx context.Context, arg UpdateGrupoProdutosParams) (GrupoProduto, error) {
+	row := q.db.QueryRow(ctx, updateGrupoProdutos,
+		arg.Nome,
+		arg.Ativo,
+		arg.ID,
+		arg.IDTenant,
+	)
+	var i GrupoProduto
+	err := row.Scan(
+		&i.ID,
+		&i.Nome,
+		&i.IDTenant,
+		&i.Ativo,
+	)
+	return i, err
 }

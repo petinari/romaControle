@@ -1,9 +1,10 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"romaControle/servicos/produtos_servicos"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CriarGrupoProduto(ctx *gin.Context) {
@@ -22,4 +23,24 @@ func GetGrupoProduto(ctx *gin.Context) {
 		return
 	}
 	sendSuccess(ctx, gruposProdutos)
+}
+
+// get grupo produto by id and id tenant
+func GetGrupoProdutoById(ctx *gin.Context) {
+	grupoProduto, er := produtos_servicos.GetGrupoProdutoById(ctx)
+	if er != nil {
+		sendError(ctx, http.StatusBadRequest, er.Error())
+		return
+	}
+	sendSuccess(ctx, grupoProduto)
+}
+
+// disable grupo produto by id and id tenant
+func DisableGrupoProdutoById(ctx *gin.Context) {
+	grupoProduto, er := produtos_servicos.DisableGrupoProdutoById(ctx)
+	if er != nil {
+		sendError(ctx, http.StatusBadRequest, er.Error())
+		return
+	}
+	sendSuccess(ctx, grupoProduto)
 }

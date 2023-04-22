@@ -23,7 +23,10 @@ func initializeRoutes(router *gin.Engine) {
 	produtos := router.Group(cadastrosProduto)
 	{
 		produtos.POST("/grupos", controller.CriarGrupoProduto)
+		produtos.GET("/grupos/:id_grupo", controller.GetGrupoProdutoById)
 		produtos.GET("/grupos", controller.GetGrupoProduto)
+		produtos.PUT("/grupos/:id_grupo", controller.DisableGrupoProdutoById)
+
 	}
 
 }

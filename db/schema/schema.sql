@@ -50,3 +50,7 @@ alter table public.grupo_produtos
 
 alter table public.grupo_produtos
     alter column id set default uuid_generate_v4();
+
+
+ALTER TABLE IF EXISTS public.grupo_produtos
+    ADD COLUMN ativo boolean;

@@ -14,9 +14,13 @@ type Querier interface {
 	CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error)
 	CreateTenant(ctx context.Context) (uuid.UUID, error)
 	CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error)
+	DisableGrupoProdutos(ctx context.Context, arg DisableGrupoProdutosParams) (GrupoProduto, error)
 	SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) ([]GrupoProduto, error)
+	SelectGrupoProdutosById(ctx context.Context, arg SelectGrupoProdutosByIdParams) (GrupoProduto, error)
+	SelectGrupoProdutosByNome(ctx context.Context, arg SelectGrupoProdutosByNomeParams) (SelectGrupoProdutosByNomeRow, error)
 	SelectTenantJoinUsuario(ctx context.Context) ([]SelectTenantJoinUsuarioRow, error)
 	SelectUsuarioPorEmail(ctx context.Context, email string) (Usuario, error)
+	UpdateGrupoProdutos(ctx context.Context, arg UpdateGrupoProdutosParams) (GrupoProduto, error)
 }
 
 var _ Querier = (*Queries)(nil)
