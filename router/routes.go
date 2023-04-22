@@ -26,6 +26,7 @@ func initializeRoutes(router *gin.Engine) {
 		produtos.GET("/grupos/:id_grupo", controller.GetGrupoProdutoById)
 		produtos.GET("/grupos", controller.GetGrupoProduto)
 		produtos.PUT("/grupos/:id_grupo", controller.DisableGrupoProdutoById)
+		produtos.GET("/grupos/nome/:nome", controller.GetGrupoProdutoByNome)
 
 	}
 

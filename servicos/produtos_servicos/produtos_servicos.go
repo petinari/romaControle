@@ -62,3 +62,17 @@ func DisableGrupoProdutoById(ctx *gin.Context) (*db.GrupoProduto, error) {
 	}
 	return grupoProduto, nil
 }
+
+// get grupo produto by nome and id tenant
+func GetGrupoProdutoByNome(ctx *gin.Context) (*db.SelectGrupoProdutosByNomeRow, error) {
+	nome := ctx.Param("nome")
+	_, tenantID, err := seguranca.ExtrairDadosUsuarioToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+	grupoProduto, er := produto_repositorio.GetGrupoProdutoByNome(nome, *tenantID)
+	if er != nil {
+		return nil, er
+	}
+	return grupoProduto, nil
+}

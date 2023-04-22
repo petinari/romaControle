@@ -59,3 +59,17 @@ func DisableGrupoProdutoById(id_grupo uuid.UUID, id_tenant uuid.UUID) (*db.Grupo
 	}
 	return &grupoProduto, nil
 }
+
+// get grupo produto by nome and id tenant
+func GetGrupoProdutoByNome(nome string, id_tenant uuid.UUID) (*db.SelectGrupoProdutosByNomeRow, error) {
+	ctx := context.Background()
+	queries := db.New(config.DB)
+	grupoProduto, er := queries.SelectGrupoProdutosByNome(ctx, db.SelectGrupoProdutosByNomeParams{
+		Nome:     nome,
+		IDTenant: id_tenant,
+	})
+	if er != nil {
+		return nil, er
+	}
+	return &grupoProduto, nil
+}

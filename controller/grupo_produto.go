@@ -44,3 +44,13 @@ func DisableGrupoProdutoById(ctx *gin.Context) {
 	}
 	sendSuccess(ctx, grupoProduto)
 }
+
+// get grupo produto by nome and id tenant
+func GetGrupoProdutoByNome(ctx *gin.Context) {
+	grupoProduto, er := produtos_servicos.GetGrupoProdutoByNome(ctx)
+	if er != nil {
+		sendError(ctx, http.StatusBadRequest, er.Error())
+		return
+	}
+	sendSuccess(ctx, grupoProduto)
+}
