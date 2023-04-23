@@ -16,6 +16,14 @@ type GrupoProduto struct {
 	Ativo    pgtype.Bool `json:"ativo"`
 }
 
+type SubgrupoProduto struct {
+	ID        uuid.UUID `json:"id"`
+	Nome      string    `json:"nome"`
+	IDGrupo   uuid.UUID `json:"id_grupo"`
+	Ativo     bool      `json:"ativo"`
+	IDTentant uuid.UUID `json:"id_tentant"`
+}
+
 type Tenant struct {
 	ID uuid.UUID `json:"id"`
 }

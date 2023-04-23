@@ -11,16 +11,23 @@ import (
 )
 
 type Querier interface {
+	AtivarSubGrupoProduto(ctx context.Context, arg AtivarSubGrupoProdutoParams) (SubgrupoProduto, error)
 	CreateGrupoProdutos(ctx context.Context, arg CreateGrupoProdutosParams) (GrupoProduto, error)
 	CreateTenant(ctx context.Context) (uuid.UUID, error)
 	CreateUsuario(ctx context.Context, arg CreateUsuarioParams) (Usuario, error)
+	DesativarSubGrupoProduto(ctx context.Context, arg DesativarSubGrupoProdutoParams) (SubgrupoProduto, error)
 	DisableGrupoProdutos(ctx context.Context, arg DisableGrupoProdutosParams) (GrupoProduto, error)
+	GetSubGrupoProdutoByGrupo(ctx context.Context, arg GetSubGrupoProdutoByGrupoParams) ([]SubgrupoProduto, error)
+	GetSubGrupoProdutoById(ctx context.Context, arg GetSubGrupoProdutoByIdParams) (SubgrupoProduto, error)
+	GetSubGrupoProdutoByNome(ctx context.Context, arg GetSubGrupoProdutoByNomeParams) (SubgrupoProduto, error)
+	InsertSubGrupoProduto(ctx context.Context, arg InsertSubGrupoProdutoParams) (SubgrupoProduto, error)
 	SelectGrupoProdutos(ctx context.Context, idTenant uuid.UUID) ([]GrupoProduto, error)
 	SelectGrupoProdutosById(ctx context.Context, arg SelectGrupoProdutosByIdParams) (GrupoProduto, error)
 	SelectGrupoProdutosByNome(ctx context.Context, arg SelectGrupoProdutosByNomeParams) (SelectGrupoProdutosByNomeRow, error)
 	SelectTenantJoinUsuario(ctx context.Context) ([]SelectTenantJoinUsuarioRow, error)
 	SelectUsuarioPorEmail(ctx context.Context, email string) (Usuario, error)
 	UpdateGrupoProdutos(ctx context.Context, arg UpdateGrupoProdutosParams) (GrupoProduto, error)
+	UpdateSubGrupoProduto(ctx context.Context, arg UpdateSubGrupoProdutoParams) (SubgrupoProduto, error)
 }
 
 var _ Querier = (*Queries)(nil)

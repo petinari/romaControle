@@ -54,3 +54,26 @@ alter table public.grupo_produtos
 
 ALTER TABLE IF EXISTS public.grupo_produtos
     ADD COLUMN ativo boolean;
+
+CREATE TABLE public.subgrupo_produtos
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    nome text NOT NULL,
+    id_grupo uuid NOT NULL,
+    ativo boolean NOT NULL,
+    id_tentant uuid NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_tenant FOREIGN KEY (id_tentant)
+        REFERENCES public.tenant (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT fk_grupo FOREIGN KEY (id_grupo)
+        REFERENCES public.grupo_produtos (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+ALTER TABLE IF EXISTS public.subgrupo_produtos
+    OWNER to postgres;
