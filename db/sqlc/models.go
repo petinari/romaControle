@@ -17,11 +17,11 @@ type GrupoProduto struct {
 }
 
 type SubgrupoProduto struct {
-	ID        uuid.UUID `json:"id"`
-	Nome      string    `json:"nome"`
-	IDGrupo   uuid.UUID `json:"id_grupo"`
-	Ativo     bool      `json:"ativo"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	ID       uuid.UUID `json:"id"`
+	Nome     string    `json:"nome"`
+	IDGrupo  uuid.UUID `json:"id_grupo"`
+	Ativo    bool      `json:"ativo"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 type Tenant struct {

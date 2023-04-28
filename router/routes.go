@@ -29,7 +29,8 @@ func initializeRoutes(router *gin.Engine) {
 		produtos.PUT("/grupos", controller.UpdateGrupoProdutoById)
 		produtos.GET("/grupos/nome/:nome", controller.GetGrupoProdutoByNome)
 		produtos.POST("/subgrupos", controller.CriarSubGrupoProduto)
-
+		produtos.PUT("/subgrupos", controller.UpdateSubGrupoProduto)
+		produtos.GET("/subgrupos/grupo/:id_grupo", controller.GetSubGrupoProdutoByGrupo)
 	}
 
 }

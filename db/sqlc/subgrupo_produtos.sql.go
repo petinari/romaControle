@@ -12,60 +12,60 @@ import (
 )
 
 const ativarSubGrupoProduto = `-- name: AtivarSubGrupoProduto :one
-update public.subgrupo_produtos set ativo = true where id = $1 and id_tentant = $2 returning id, nome, id_grupo, ativo, id_tentant
+update public.subgrupo_produtos set ativo = true where id = $1 and id_tenant = $2 returning id, nome, id_grupo, ativo, id_tenant
 `
 
 type AtivarSubGrupoProdutoParams struct {
-	ID        uuid.UUID `json:"id"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) AtivarSubGrupoProduto(ctx context.Context, arg AtivarSubGrupoProdutoParams) (SubgrupoProduto, error) {
-	row := q.db.QueryRow(ctx, ativarSubGrupoProduto, arg.ID, arg.IDTentant)
+	row := q.db.QueryRow(ctx, ativarSubGrupoProduto, arg.ID, arg.IDTenant)
 	var i SubgrupoProduto
 	err := row.Scan(
 		&i.ID,
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }
 
 const desativarSubGrupoProduto = `-- name: DesativarSubGrupoProduto :one
-update public.subgrupo_produtos set ativo = false where id = $1 and id_tentant = $2 returning id, nome, id_grupo, ativo, id_tentant
+update public.subgrupo_produtos set ativo = false where id = $1 and id_tenant = $2 returning id, nome, id_grupo, ativo, id_tenant
 `
 
 type DesativarSubGrupoProdutoParams struct {
-	ID        uuid.UUID `json:"id"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) DesativarSubGrupoProduto(ctx context.Context, arg DesativarSubGrupoProdutoParams) (SubgrupoProduto, error) {
-	row := q.db.QueryRow(ctx, desativarSubGrupoProduto, arg.ID, arg.IDTentant)
+	row := q.db.QueryRow(ctx, desativarSubGrupoProduto, arg.ID, arg.IDTenant)
 	var i SubgrupoProduto
 	err := row.Scan(
 		&i.ID,
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }
 
 const getSubGrupoProdutoByGrupo = `-- name: GetSubGrupoProdutoByGrupo :many
-select id, nome, id_grupo, ativo, id_tentant from public.subgrupo_produtos where id_grupo = $1 and id_tentant = $2 and ativo = true
+select id, nome, id_grupo, ativo, id_tenant from public.subgrupo_produtos where id_grupo = $1 and id_tenant = $2 and ativo = true
 `
 
 type GetSubGrupoProdutoByGrupoParams struct {
-	IDGrupo   uuid.UUID `json:"id_grupo"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	IDGrupo  uuid.UUID `json:"id_grupo"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) GetSubGrupoProdutoByGrupo(ctx context.Context, arg GetSubGrupoProdutoByGrupoParams) ([]SubgrupoProduto, error) {
-	rows, err := q.db.Query(ctx, getSubGrupoProdutoByGrupo, arg.IDGrupo, arg.IDTentant)
+	rows, err := q.db.Query(ctx, getSubGrupoProdutoByGrupo, arg.IDGrupo, arg.IDTenant)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (q *Queries) GetSubGrupoProdutoByGrupo(ctx context.Context, arg GetSubGrupo
 			&i.Nome,
 			&i.IDGrupo,
 			&i.Ativo,
-			&i.IDTentant,
+			&i.IDTenant,
 		); err != nil {
 			return nil, err
 		}
@@ -91,58 +91,58 @@ func (q *Queries) GetSubGrupoProdutoByGrupo(ctx context.Context, arg GetSubGrupo
 }
 
 const getSubGrupoProdutoById = `-- name: GetSubGrupoProdutoById :one
-select id, nome, id_grupo, ativo, id_tentant from public.subgrupo_produtos where id = $1 and id_tentant = $2 and ativo = true
+select id, nome, id_grupo, ativo, id_tenant from public.subgrupo_produtos where id = $1 and id_tenant = $2 and ativo = true
 `
 
 type GetSubGrupoProdutoByIdParams struct {
-	ID        uuid.UUID `json:"id"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) GetSubGrupoProdutoById(ctx context.Context, arg GetSubGrupoProdutoByIdParams) (SubgrupoProduto, error) {
-	row := q.db.QueryRow(ctx, getSubGrupoProdutoById, arg.ID, arg.IDTentant)
+	row := q.db.QueryRow(ctx, getSubGrupoProdutoById, arg.ID, arg.IDTenant)
 	var i SubgrupoProduto
 	err := row.Scan(
 		&i.ID,
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }
 
 const getSubGrupoProdutoByNome = `-- name: GetSubGrupoProdutoByNome :one
-select id, nome, id_grupo, ativo, id_tentant from public.subgrupo_produtos where nome = $1 and id_tentant = $2 and ativo = true
+select id, nome, id_grupo, ativo, id_tenant from public.subgrupo_produtos where nome = $1 and id_tenant = $2 and ativo = true
 `
 
 type GetSubGrupoProdutoByNomeParams struct {
-	Nome      string    `json:"nome"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	Nome     string    `json:"nome"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) GetSubGrupoProdutoByNome(ctx context.Context, arg GetSubGrupoProdutoByNomeParams) (SubgrupoProduto, error) {
-	row := q.db.QueryRow(ctx, getSubGrupoProdutoByNome, arg.Nome, arg.IDTentant)
+	row := q.db.QueryRow(ctx, getSubGrupoProdutoByNome, arg.Nome, arg.IDTenant)
 	var i SubgrupoProduto
 	err := row.Scan(
 		&i.ID,
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }
 
 const insertSubGrupoProduto = `-- name: InsertSubGrupoProduto :one
-insert into public.subgrupo_produtos (nome, id_grupo, ativo, id_tentant) values ($1, $2, $3, $4) returning id, nome, id_grupo, ativo, id_tentant
+insert into public.subgrupo_produtos (nome, id_grupo, ativo, id_tenant) values ($1, $2, $3, $4) returning id, nome, id_grupo, ativo, id_tenant
 `
 
 type InsertSubGrupoProdutoParams struct {
-	Nome      string    `json:"nome"`
-	IDGrupo   uuid.UUID `json:"id_grupo"`
-	Ativo     bool      `json:"ativo"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	Nome     string    `json:"nome"`
+	IDGrupo  uuid.UUID `json:"id_grupo"`
+	Ativo    bool      `json:"ativo"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) InsertSubGrupoProduto(ctx context.Context, arg InsertSubGrupoProdutoParams) (SubgrupoProduto, error) {
@@ -150,7 +150,7 @@ func (q *Queries) InsertSubGrupoProduto(ctx context.Context, arg InsertSubGrupoP
 		arg.Nome,
 		arg.IDGrupo,
 		arg.Ativo,
-		arg.IDTentant,
+		arg.IDTenant,
 	)
 	var i SubgrupoProduto
 	err := row.Scan(
@@ -158,20 +158,20 @@ func (q *Queries) InsertSubGrupoProduto(ctx context.Context, arg InsertSubGrupoP
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }
 
 const updateSubGrupoProduto = `-- name: UpdateSubGrupoProduto :one
-update public.subgrupo_produtos set nome = $1, ativo = $2 where id = $3 and id_tentant = $4 returning id, nome, id_grupo, ativo, id_tentant
+update public.subgrupo_produtos set nome = $1, ativo = $2 where id = $3 and id_tenant = $4 returning id, nome, id_grupo, ativo, id_tenant
 `
 
 type UpdateSubGrupoProdutoParams struct {
-	Nome      string    `json:"nome"`
-	Ativo     bool      `json:"ativo"`
-	ID        uuid.UUID `json:"id"`
-	IDTentant uuid.UUID `json:"id_tentant"`
+	Nome     string    `json:"nome"`
+	Ativo    bool      `json:"ativo"`
+	ID       uuid.UUID `json:"id"`
+	IDTenant uuid.UUID `json:"id_tenant"`
 }
 
 func (q *Queries) UpdateSubGrupoProduto(ctx context.Context, arg UpdateSubGrupoProdutoParams) (SubgrupoProduto, error) {
@@ -179,7 +179,7 @@ func (q *Queries) UpdateSubGrupoProduto(ctx context.Context, arg UpdateSubGrupoP
 		arg.Nome,
 		arg.Ativo,
 		arg.ID,
-		arg.IDTentant,
+		arg.IDTenant,
 	)
 	var i SubgrupoProduto
 	err := row.Scan(
@@ -187,7 +187,7 @@ func (q *Queries) UpdateSubGrupoProduto(ctx context.Context, arg UpdateSubGrupoP
 		&i.Nome,
 		&i.IDGrupo,
 		&i.Ativo,
-		&i.IDTentant,
+		&i.IDTenant,
 	)
 	return i, err
 }

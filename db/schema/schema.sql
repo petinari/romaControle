@@ -61,7 +61,7 @@ CREATE TABLE public.subgrupo_produtos
     nome text NOT NULL,
     id_grupo uuid NOT NULL,
     ativo boolean NOT NULL,
-    id_tentant uuid NOT NULL,
+    id_tenant uuid NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_tenant FOREIGN KEY (id_tentant)
         REFERENCES public.tenant (id) MATCH SIMPLE
