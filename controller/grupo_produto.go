@@ -54,3 +54,13 @@ func GetGrupoProdutoByNome(ctx *gin.Context) {
 	}
 	sendSuccess(ctx, grupoProduto)
 }
+
+// update grupo produto by id and id tenant
+func UpdateGrupoProdutoById(ctx *gin.Context) {
+	grupoProduto, er := produtos_servicos.UpdateGrupoProdutoById(ctx)
+	if er != nil {
+		sendError(ctx, http.StatusBadRequest, er.Error())
+		return
+	}
+	sendSuccess(ctx, grupoProduto)
+}

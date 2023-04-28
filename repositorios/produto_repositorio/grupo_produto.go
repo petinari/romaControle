@@ -73,3 +73,19 @@ func GetGrupoProdutoByNome(nome string, id_tenant uuid.UUID) (*db.SelectGrupoPro
 	}
 	return &grupoProduto, nil
 }
+
+// update grupo produto by id and id tenant
+func UpdateGrupoProdutoById(produto db.GrupoProduto) (*db.GrupoProduto, error) {
+	ctx := context.Background()
+	queries := db.New(config.DB)
+	grupoProduto, er := queries.UpdateGrupoProdutos(ctx, db.UpdateGrupoProdutosParams{
+		ID:       produto.ID,
+		IDTenant: produto.IDTenant,
+		Nome:     produto.Nome,
+		Ativo:    produto.Ativo,
+	})
+	if er != nil {
+		return nil, er
+	}
+	return &grupoProduto, nil
+}
